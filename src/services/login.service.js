@@ -16,18 +16,6 @@ const login = async (email, password) => {
   return { type: null, message: user };
 };
 
-/* const insert = async (msgUser) => {
-    const validationResult = validateLogin(msgUser);
-    if (validationResult.type) return validationResult;
-    let addUser;
-    try {
-      addUser = await User.create(msgUser);
-    } catch (error) {
-      console.log(error);
-    }
-    return { type: null, message: addUser };
-  }; */
-
 module.exports = {
   getEmail,
   login,
