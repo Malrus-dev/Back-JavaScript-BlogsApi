@@ -22,7 +22,6 @@ const tokenNotFound = (verifyToken) => {
 const tokenValidationMiddleware = (req, res, next) => {
     const { authorization } = req.headers;
     const verifyToken = generateToken.verifyToken(authorization);
-    console.log('verifyToken', verifyToken);
     tokenInvalid(verifyToken);
     tokenNotFound(verifyToken);
     if (error === true) return res.status(401).json({ message: text });    

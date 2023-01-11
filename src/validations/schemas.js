@@ -32,7 +32,10 @@ const userCreateSchema = Joi.object({
   image: Joi.string(),    
 });
 
+const idSchema = Joi.number().integer().min(1).required();
+
 module.exports = {
   loginSchema,
   userCreateSchema,
+  idSchema,
 };

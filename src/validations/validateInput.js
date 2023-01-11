@@ -14,7 +14,14 @@ const userCreate = async (obj) => {
   return { type: null, message: '' };
 };
 
+const validateId = (id) => {
+  const { error } = schemas.idSchema.validate(id);
+  if (error) return { type: error.details[0].type, message: 'please enter a valid id' };
+  return { type: null, message: '' };
+};
+
 module.exports = {
   validateLogin,
   userCreate,
+  validateId,
 };

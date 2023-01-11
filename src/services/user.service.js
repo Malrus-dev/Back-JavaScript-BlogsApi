@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const { userCreate } = require('../validations/validateInput');
+const { userCreate, validateId } = require('../validations/validateInput');
 
 const getEmail = (email) => User.findOne({ where: { email } });
 
@@ -26,12 +26,27 @@ const insert = async (msgUser) => {
           email: user.email,
           image: user.image,
       }));
-    // console.log(usersWithoutPasswords);
     return { type: null, message: usersWithoutPasswords };
+  };
+
+  const getById = async (info) => {
+    const id = Number(info);
+    const validationResult = validateId(id);
+    let response;
+    if (validationResult.type) return validationResult;
+    const data = await User.findByPk(id);
+    if (!data) return { type: 'NOT_FOUND', message: 'User does not exist' };
+    if (data) {
+      const { dataValues } = data;
+      delete dataValues.password;
+      response = dataValues;
+    } 
+    return { type: null, message: response };
   };
 
 module.exports = {
   getEmail,
   insert,
   getAll,
+  getById,
 };
