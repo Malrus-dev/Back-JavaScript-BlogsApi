@@ -34,8 +34,11 @@ const userCreateSchema = Joi.object({
 
 const idSchema = Joi.number().integer().min(1).required();
 
+const nameSchema = Joi.object({ name: Joi.string().min(1).required() });
+
 module.exports = {
   loginSchema,
   userCreateSchema,
   idSchema,
+  nameSchema,
 };

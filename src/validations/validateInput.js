@@ -20,8 +20,16 @@ const validateId = (id) => {
   return { type: null, message: '' };
 };
 
+const validateName = (name) => {
+  const text = '"name" is required';
+  const { error } = schemas.nameSchema.validate(name);
+  if (error) return { type: 'INVALID_VALUE', message: text };
+  return { type: null, message: '' };
+};
+
 module.exports = {
   validateLogin,
   userCreate,
   validateId,
+  validateName,
 };
