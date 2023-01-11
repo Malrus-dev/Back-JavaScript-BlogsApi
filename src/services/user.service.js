@@ -1,20 +1,7 @@
 const { User } = require('../models');
-const { validateLogin, userCreate } = require('../validations/validateInput');
+const { userCreate } = require('../validations/validateInput');
 
 const getEmail = (email) => User.findOne({ where: { email } });
-
-const login = async (email, password) => {
-  const error = await validateLogin(email, password);
-  if (error.type) return error;
-
-  const user = await getEmail(email);
-
-  if (!user || user.password !== password) {
-    return { type: 'UNMATCHED_FIELDS', message: 'Invalid fields' };
-  }
-
-  return { type: null, message: user };
-};
 
 const insert = async (msgUser) => {
     const validationResult = await userCreate(msgUser);
@@ -31,8 +18,20 @@ const insert = async (msgUser) => {
     return { type: null, message: addUser };
   };
 
+  const getAll = async () => {
+    const users = await User.findAll();
+    const usersWithoutPasswords = users.map((user) => ({
+          id: user.id,
+          displayName: user.displayName,
+          email: user.email,
+          image: user.image,
+      }));
+    // console.log(usersWithoutPasswords);
+    return { type: null, message: usersWithoutPasswords };
+  };
+
 module.exports = {
   getEmail,
-  login,
   insert,
+  getAll,
 };

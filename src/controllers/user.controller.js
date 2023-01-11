@@ -17,6 +17,12 @@ const insert = async (req, res) => {
     // return res.status(201).json(message);
   };
 
+  const getAll = async (_req, res) => {
+    const { message } = await userService.getAll();
+    return res.status(200).json(message);
+  };
+
 module.exports = {
   insert,
+  getAll,
 };

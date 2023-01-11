@@ -15,6 +15,7 @@ const createToken = (userWithoutPassword) => {
 const verifyToken = (authorization) => {
   try {
     const payload = jwt.verify(authorization, JWT_SECRET);
+    console.log('verifytoken', payload);
     return payload;
   } catch (error) {
     return { isError: true, error };
