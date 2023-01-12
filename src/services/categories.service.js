@@ -12,9 +12,6 @@ const insert = async (msgUser) => {
 
   const getAll = async () => {
     const categories = await Category.findAll();
-    console.log('**********************************************************');
-    console.log(categories);
-    // const { dataValues } = categories;
      return { type: null, message: categories };
   };
 

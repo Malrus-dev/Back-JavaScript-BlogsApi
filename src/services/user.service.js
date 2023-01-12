@@ -9,8 +9,6 @@ const insert = async (msgUser) => {
       return validationResult;
     }
     const userByEmail = await User.findOne({ where: { email: msgUser.email } });
-    console.log('userByEmail', userByEmail);
-    console.log(userByEmail !== undefined);
     if (userByEmail) {
       return { type: 'CONFLICT', message: 'User already registered' };
     }

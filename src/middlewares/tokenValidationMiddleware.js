@@ -13,7 +13,7 @@ const tokenInvalid = (verifyToken) => {
 
 const tokenNotFound = (verifyToken) => {
   if (verifyToken.isError && verifyToken.error.toString()
-  .indexOf('jwt must be provided') !== -1) {
+    .indexOf('jwt must be provided') !== -1) {
     error = true;
     text = 'Token not found';
   }
@@ -24,7 +24,8 @@ const tokenValidationMiddleware = (req, res, next) => {
     const verifyToken = generateToken.verifyToken(authorization);
     tokenInvalid(verifyToken);
     tokenNotFound(verifyToken);
-    if (error === true) return res.status(401).json({ message: text });    
+    if (error === true) return res.status(401).json({ message: text });
+    error = false;    
     next();
 };
 
