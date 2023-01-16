@@ -1,7 +1,7 @@
 const generateToken = require('../auth/jwtFunctions');
 
-let text = '';
-let error = false;
+let text;
+let error;
 
 const tokenInvalid = (verifyToken) => {
   if (verifyToken.isError && (verifyToken.error.toString().indexOf('invalid token') !== -1
@@ -20,6 +20,8 @@ const tokenNotFound = (verifyToken) => {
 };
 
 const tokenValidationMiddleware = (req, res, next) => {
+    text = '';
+    error = false;
     const { authorization } = req.headers;
     const verifyToken = generateToken.verifyToken(authorization);
     tokenInvalid(verifyToken);

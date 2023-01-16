@@ -7,7 +7,7 @@ const BlogPostModel = (sequelize, DataTypes) => {
     },
     title: DataTypes.STRING,
     content: DataTypes.STRING,
-    userId: DataTypes.STRING,
+    userId: DataTypes.INTEGER,
     published: DataTypes.STRING,
     updated: DataTypes.STRING,
   },
@@ -16,6 +16,11 @@ const BlogPostModel = (sequelize, DataTypes) => {
     tableName: 'blog_posts',
     underscored: true,
   });
+
+  BlogPost.associate = (models) => {
+    BlogPost.belongsTo(models.User,
+      { foreingKey: 'userId', as: 'user'})
+  }
 
   return BlogPost;
 };

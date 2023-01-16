@@ -2,7 +2,7 @@ const { Category } = require('../models');
 const { validateName } = require('../validations/validateInput');
 
 const insert = async (msgUser) => {
-    const validationResult = await validateName(msgUser);
+    const validationResult = validateName(msgUser);
     if (validationResult.type) {
       return validationResult;
     }

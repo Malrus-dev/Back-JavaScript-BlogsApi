@@ -8,7 +8,7 @@ const jwtConfig = {
 };
 
 const createToken = (userWithoutPassword) => {
-  const token = jwt.sign({ data: userWithoutPassword }, JWT_SECRET, jwtConfig);
+  const token = jwt.sign({ email: userWithoutPassword }, JWT_SECRET, jwtConfig);
   return token;
 };
 
