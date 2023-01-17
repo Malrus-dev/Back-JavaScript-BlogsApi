@@ -46,10 +46,18 @@ const blogPostSchema = Joi.object(
   },
 );
 
+const blogPostEditSchema = Joi.object(
+  { 
+    title: Joi.string().min(1).required().messages(objFieldsMissing),
+    content: Joi.string().min(1).required().messages(objFieldsMissing),
+  },
+);
+
 module.exports = {
   loginSchema,
   userCreateSchema,
   idSchema,
   nameSchema,
   blogPostSchema,
+  blogPostEditSchema,
 };

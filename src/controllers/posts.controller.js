@@ -32,8 +32,21 @@ const insert = async (req, res) => {
     res.status(200).json(message);
   };
 
+  const changePost = async (req, res) => {
+    const { id } = req.params;
+    const { title, content } = req.body;
+    const { authorization } = req.headers;
+    const data = { title, content, id };
+    const { type, message } = await postsService.changePost(data, authorization);
+    if (type) {
+      return res.status(errorMap.mapError(type)).json({ message });
+    }
+    res.status(200).json(message);
+  };
+
 module.exports = {
   insert,
   getPostsUser,
   getPostById,
+  changePost,
 };

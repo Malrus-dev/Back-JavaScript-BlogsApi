@@ -34,10 +34,18 @@ const validateBlogPost = (obj) => {
   return { type: null, message: '' };
 };
 
+const validateBlogEditPost = (obj) => {
+  const text = 'Some required fields are missing';
+  const { error } = schemas.blogPostEditSchema.validate(obj);
+  if (error) return { type: 'INVALID_VALUE', message: text };
+  return { type: null, message: '' };
+};
+
 module.exports = {
   validateLogin,
   userCreate,
   validateId,
   validateName,
   validateBlogPost,
+  validateBlogEditPost,
 };

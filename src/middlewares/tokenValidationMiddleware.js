@@ -19,7 +19,7 @@ const tokenNotFound = (verifyToken) => {
   }
 };
 
-const tokenValidationMiddleware = (req, res, next) => {
+const tokenValidationMiddleware = async (req, res, next) => {
     text = '';
     error = false;
     const { authorization } = req.headers;

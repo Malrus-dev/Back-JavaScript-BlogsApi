@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const { PostCategory, BlogPost, User, Category } = require('../models');
-const { validateBlogPost } = require('../validations/validateInput');
+const { validateBlogPost, validateBlogEditPost } = require('../validations/validateInput');
 const tokenFunc = require('../auth/jwtFunctions');
 const config = require('../config/config');
 
@@ -53,13 +53,38 @@ const insert = async (msgUser, authorization) => {
 
   const getPostById = async (id, authorization) => {
     const user = await tokenFunc.cathUserFromToken(authorization);
+    if (user.type) return user;
     const postById = await BlogPost.findByPk(id, findOptions(user.id));
     if (postById === null) return { type: 'NOT_FOUND', message: 'Post does not exist' };
     return { type: null, message: postById };
+  };
+
+  // eslint-disable-next-line max-lines-per-function
+  const changePost = async (data, authorization) => {
+    const { id, title, content } = data;
+    const validationResult = validateBlogEditPost({ title, content });
+    if (validationResult.type) {
+      return validationResult;
+    }
+    
+    const user = await tokenFunc.cathUserFromToken(authorization);
+    if (user.type) return user;
+    try {
+      const postOfInterest = await getPostById(id, authorization);
+      if (postOfInterest.message.UserId !== user.id) {
+        return { type: 'UNAUTHORIZED', message: 'Unauthorized user' }; 
+      }    
+      await BlogPost.update({ title, content }, { where: { id } });
+      const updatedPost = await getPostById(id, authorization);
+      return updatedPost;
+    } catch (error) {
+      return { type: 'ERROR', message: error };              
+    }  
   };
 
 module.exports = {
   insert,
   getPostsUser,
   getPostById,
+  changePost,
 };
