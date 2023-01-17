@@ -3,6 +3,7 @@ const errorMap = {
   UNMATCHED_FIELDS: 400,
   NOT_FOUND: 404,
   CONFLICT: 409,
+  UNAUTHORIZED: 401,
 };
 
 const mapError = (type) => errorMap[type] || 500;

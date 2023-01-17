@@ -27,9 +27,17 @@ const validateName = (name) => {
   return { type: null, message: '' };
 };
 
+const validateBlogPost = (obj) => {
+  const text = 'Some required fields are missing';
+  const { error } = schemas.blogPostSchema.validate(obj);
+  if (error) return { type: 'INVALID_VALUE', message: text };
+  return { type: null, message: '' };
+};
+
 module.exports = {
   validateLogin,
   userCreate,
   validateId,
   validateName,
+  validateBlogPost,
 };

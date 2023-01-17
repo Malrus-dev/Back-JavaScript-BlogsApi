@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { User } = require('../models');
 
 const { JWT_SECRET } = process.env;
 
@@ -15,14 +16,35 @@ const createToken = (userWithoutPassword) => {
 const verifyToken = (authorization) => {
   try {
     const payload = jwt.verify(authorization, JWT_SECRET);
-    console.log('verifytoken', payload);
+    // console.log('verifytoken', payload);
     return payload;
   } catch (error) {
     return { isError: true, error };
   }
 };
 
+const cathUserFromToken = async (authorization) => {
+  try {
+    const decoded = jwt.verify(authorization, JWT_SECRET);
+    // console.log('decoded', decoded);
+    const user = await User.findOne({ where: { email: decoded.email } });
+    let userWithoutPassword;
+    if (user) {
+      const { dataValues } = user;
+      userWithoutPassword = dataValues;
+      delete userWithoutPassword.password;
+    }
+    if (!user) {
+      return ({ type: 'UNAUTHORIZED', message: 'Erro ao procurar usuário do token.' });
+    }
+    return ({ ...userWithoutPassword });
+  } catch (err) {
+    return { message: err.message };
+  }
+};
+
 module.exports = {
   createToken,
   verifyToken,
+  cathUserFromToken,
 };
