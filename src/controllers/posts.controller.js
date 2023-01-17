@@ -22,7 +22,18 @@ const insert = async (req, res) => {
     return res.status(200).json(message);
   };
 
+  const getPostById = async (req, res) => {
+    const { id } = req.params;
+    const { authorization } = req.headers;
+    const { type, message } = await postsService.getPostById(id, authorization);
+    if (type) {
+      return res.status(errorMap.mapError(type)).json({ message });
+    }
+    res.status(200).json(message);
+  };
+
 module.exports = {
   insert,
   getPostsUser,
+  getPostById,
 };

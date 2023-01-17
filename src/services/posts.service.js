@@ -7,8 +7,6 @@ const config = require('../config/config');
 const env = process.env.NODE_ENV || 'development';
 const sequelize = new Sequelize(config[env]);
 
-const getEmail = (email) => PostCategory.findOne({ where: { email } });
-
 const findOptions = (id) => ({ 
     include: [
       { model: User, as: 'user', attributes: ['id', 'displayName', 'email', 'image'] },
@@ -50,11 +48,18 @@ const insert = async (msgUser, authorization) => {
     const user = await tokenFunc.cathUserFromToken(authorization);
     if (user.type) return user;
     const allPosts = await BlogPost.findAll(findOptions(user.id));
-    return { message: allPosts };
+    return { type: null, message: allPosts };
+  };
+
+  const getPostById = async (id, authorization) => {
+    const user = await tokenFunc.cathUserFromToken(authorization);
+    const postById = await BlogPost.findByPk(id, findOptions(user.id));
+    if (postById === null) return { type: 'NOT_FOUND', message: 'Post does not exist' };
+    return { type: null, message: postById };
   };
 
 module.exports = {
-  getEmail,
   insert,
   getPostsUser,
+  getPostById,
 };
