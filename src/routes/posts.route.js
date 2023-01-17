@@ -5,5 +5,6 @@ const tokenValidationMiddleware = require('../middlewares/tokenValidationMiddlew
 const Posts = express.Router();
 
 Posts.post('/', tokenValidationMiddleware, postsController.insert);
+Posts.get('/', tokenValidationMiddleware, postsController.getPostsUser);
 
 module.exports = Posts;

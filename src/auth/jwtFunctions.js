@@ -16,7 +16,6 @@ const createToken = (userWithoutPassword) => {
 const verifyToken = (authorization) => {
   try {
     const payload = jwt.verify(authorization, JWT_SECRET);
-    // console.log('verifytoken', payload);
     return payload;
   } catch (error) {
     return { isError: true, error };
@@ -26,7 +25,6 @@ const verifyToken = (authorization) => {
 const cathUserFromToken = async (authorization) => {
   try {
     const decoded = jwt.verify(authorization, JWT_SECRET);
-    // console.log('decoded', decoded);
     const user = await User.findOne({ where: { email: decoded.email } });
     let userWithoutPassword;
     if (user) {
@@ -39,7 +37,7 @@ const cathUserFromToken = async (authorization) => {
     }
     return ({ ...userWithoutPassword });
   } catch (err) {
-    return { message: err.message };
+    return { type: 'UNAUTHORIZED', message: err.message };
   }
 };
 
