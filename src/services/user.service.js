@@ -1,5 +1,6 @@
 const { User } = require('../models');
 const { userCreate, validateId } = require('../validations/validateInput');
+const tokenFunc = require('../auth/jwtFunctions');
 
 const getEmail = (email) => User.findOne({ where: { email } });
 
@@ -42,9 +43,21 @@ const insert = async (msgUser) => {
     return { type: null, message: response };
   };
 
+  const deleteUser = async (authorization) => {
+    try {
+      const user = await tokenFunc.cathUserFromToken(authorization);
+      if (user.type) return user;
+      await User.destroy({ where: { id: user.id } });
+      return { type: null, message: 'User deleted' };
+    } catch (error) {
+      return { type: 'ERROR', message: error };  
+    }
+  };
+
 module.exports = {
   getEmail,
   insert,
   getAll,
   getById,
+  deleteUser,
 };

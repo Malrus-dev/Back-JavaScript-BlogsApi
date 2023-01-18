@@ -31,8 +31,18 @@ const insert = async (req, res) => {
     return res.status(200).json(message);
   };
 
+  const deleteUser = async (req, res) => {
+    const { authorization } = req.headers;
+    const { type, message } = await userService.deleteUser(authorization);
+    if (type) {
+      return res.status(errorMap.mapError(type)).json({ message });
+    }
+    return res.status(204).end();
+  };
+
 module.exports = {
   insert,
   getAll,
   getById,
+  deleteUser,
 };
