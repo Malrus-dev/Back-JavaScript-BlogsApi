@@ -8,12 +8,12 @@ const env = process.env.NODE_ENV || 'development';
 const sequelize = new Sequelize(config[env]);
 
 const findOptions = (id) => ({ 
-    include: [
-      { model: User, as: 'user', attributes: ['id', 'displayName', 'email', 'image'] },
-      { model: Category, as: 'categories', through: { attributes: [] } },
-    ],
-    where: { userId: id },
-  });
+  include: [
+    { model: User, as: 'user', attributes: ['id', 'displayName', 'email', 'image'] },
+    { model: Category, as: 'categories', through: { attributes: [] } },
+  ],
+  where: { userId: id },
+});
 
 const initiateTransaction = async (msgUser, authorization) => {
   const result = await sequelize.transaction(async (t) => {
@@ -59,7 +59,6 @@ const insert = async (msgUser, authorization) => {
     return { type: null, message: postById };
   };
 
-  // eslint-disable-next-line max-lines-per-function
   const changePost = async (data, authorization) => {
     const { id, title, content } = data;
     const validationResult = validateBlogEditPost({ title, content });
@@ -82,9 +81,29 @@ const insert = async (msgUser, authorization) => {
     }  
   };
 
+  // eslint-disable-next-line max-lines-per-function
+  const deletePost = async (id, authorization) => {
+    try {
+      const user = await tokenFunc.cathUserFromToken(authorization);
+      if (user.type) return user;
+      const postOfInterest = await BlogPost.findByPk(id);
+      if (postOfInterest === null) return { type: 'NOT_FOUND', message: 'Post does not exist' };
+      if (postOfInterest.dataValues.UserId !== user.id) {
+        return { type: 'UNAUTHORIZED', message: 'Unauthorized user' }; 
+      }
+      await BlogPost.destroy({
+        where: { id },
+      });
+      return { type: null, message: 'Post deleted' };
+    } catch (error) {
+      return { type: 'ERROR', message: error };        
+    }
+  };
+
 module.exports = {
   insert,
   getPostsUser,
   getPostById,
   changePost,
+  deletePost,
 };

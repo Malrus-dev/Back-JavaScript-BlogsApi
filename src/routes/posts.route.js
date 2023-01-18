@@ -8,5 +8,6 @@ Posts.post('/', tokenValidationMiddleware, postsController.insert);
 Posts.get('/', tokenValidationMiddleware, postsController.getPostsUser);
 Posts.get('/:id', tokenValidationMiddleware, postsController.getPostById);
 Posts.put('/:id', tokenValidationMiddleware, postsController.changePost);
+Posts.delete('/:id', tokenValidationMiddleware, postsController.deletePost);
 
 module.exports = Posts;

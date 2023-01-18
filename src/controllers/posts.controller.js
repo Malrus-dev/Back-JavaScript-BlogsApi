@@ -44,9 +44,20 @@ const insert = async (req, res) => {
     res.status(200).json(message);
   };
 
+  const deletePost = async (req, res) => {
+    const { id } = req.params;
+    const { authorization } = req.headers;
+    const { type, message } = await postsService.deletePost(id, authorization);
+    if (type) {
+      return res.status(errorMap.mapError(type)).json({ message });
+    }
+    res.status(204).end();
+  };
+
 module.exports = {
   insert,
   getPostsUser,
   getPostById,
   changePost,
+  deletePost,
 };
