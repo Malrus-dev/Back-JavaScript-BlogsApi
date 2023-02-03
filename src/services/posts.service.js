@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
 const { PostCategory, BlogPost, User, Category } = require('../models');
 const { validateBlogPost, validateBlogEditPost } = require('../validations/validateInput');
 const tokenFunc = require('../auth/jwtFunctions');
@@ -81,7 +82,6 @@ const insert = async (msgUser, authorization) => {
     }  
   };
 
-  // eslint-disable-next-line max-lines-per-function
   const deletePost = async (id, authorization) => {
     try {
       const user = await tokenFunc.cathUserFromToken(authorization);
@@ -100,10 +100,32 @@ const insert = async (msgUser, authorization) => {
     }
   };
 
+  const searchByTerm = async (q) => {
+    try {
+      const query = `${q}%`;
+      const posts = await BlogPost.findAll({
+        where: {
+          [Op.or]: [
+            { title: { [Op.like]: `%${query}%` } },
+            { content: { [Op.like]: `%${query}%` } },
+          ],
+        },
+        include: [
+          { model: User, as: 'user', attributes: { exclude: ['password'] } },
+          { model: Category, as: 'categories', through: { attributes: [] } },
+        ], 
+      });
+      return { type: null, message: posts };      
+    } catch (error) {
+      return { type: 'ERROR', message: error };        
+    }
+  };
+
 module.exports = {
   insert,
   getPostsUser,
   getPostById,
   changePost,
   deletePost,
+  searchByTerm,
 };

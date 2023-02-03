@@ -4,6 +4,7 @@ const tokenValidationMiddleware = require('../middlewares/tokenValidationMiddlew
 
 const Posts = express.Router();
 
+Posts.get('/search', tokenValidationMiddleware, postsController.searchByTerm);
 Posts.post('/', tokenValidationMiddleware, postsController.insert);
 Posts.get('/', tokenValidationMiddleware, postsController.getPostsUser);
 Posts.get('/:id', tokenValidationMiddleware, postsController.getPostById);

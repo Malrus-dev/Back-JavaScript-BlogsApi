@@ -54,10 +54,21 @@ const insert = async (req, res) => {
     res.status(204).end();
   };
 
+  const searchByTerm = async (req, res) => {
+    const { q } = req.query;
+    console.log('AEEEEEEEEEEEEEEEEEEee');
+    const { type, message } = await postsService.searchByTerm(q);
+    if (type) {
+      return res.status(errorMap.mapError(type)).json({ message });
+    }
+    res.status(200).json(message);
+  };
+
 module.exports = {
   insert,
   getPostsUser,
   getPostById,
   changePost,
   deletePost,
+  searchByTerm,
 };
